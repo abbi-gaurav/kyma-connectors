@@ -32219,4 +32219,8 @@ data:
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: spec
+  name: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}-spec
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ template "bundle.fullname" . }}
+    component: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}
