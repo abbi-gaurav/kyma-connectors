@@ -4,3 +4,7 @@ entries:
     - name: docusign-connector
       description: "DocuSign connector"
       version: 0.0.1
+  github-connector:
+    - name: github-connector
+      description: "github connector"
+      version: 0.0.1
