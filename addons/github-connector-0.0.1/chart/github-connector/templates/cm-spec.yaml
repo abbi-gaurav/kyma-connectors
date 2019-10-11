@@ -32214,7 +32214,7 @@ data:
     }
   headers.json: |
     {
-        "Authorization" : {{ printf "token %s" .Values.token }}
+        "Authorization" : {{ printf "token %s" .Values.token | quote }}
     }
 kind: ConfigMap
 metadata:
