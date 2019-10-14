@@ -36,4 +36,5 @@ spec:
           - --password=$(PASSWORD)
           - --app-name=github
           - --event-publish-url=http://event-publish-service.kyma-system.svc.cluster.local:8080/v1/events
+          - --secret-key=kyma4ever
 status: {}

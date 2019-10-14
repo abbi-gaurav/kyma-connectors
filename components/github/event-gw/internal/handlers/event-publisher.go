@@ -1,41 +1,41 @@
 package handlers
 
 import (
+	"github.com/abbi-gaurav/kyma-connectors/components/github/event-gw/internal/incoming"
 	"github.com/abbi-gaurav/kyma-connectors/components/github/event-gw/internal/logger"
-	"io/ioutil"
+	"github.com/abbi-gaurav/kyma-connectors/components/github/event-gw/internal/model/errors"
+	"github.com/abbi-gaurav/kyma-connectors/components/github/event-gw/internal/outgoing"
 	"net/http"
 )
 
 type EventPublisher struct {
-	//eventForwarder *outgoing.EventForwarder
+	eventForwarder *outgoing.EventForwarder
+	ip             *incoming.InboundProcessor
 }
 
 func NewEventPublisher() *EventPublisher {
-	return &EventPublisher{/*eventForwarder: outgoing.NewEventForwarder()*/}
+	return &EventPublisher{
+		ip:             incoming.New(),
+		eventForwarder: outgoing.NewEventForwarder(),
+	}
 }
 
 func (ep *EventPublisher) EventHandler() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
+		kymaEvent, err := ep.ip.Process(r)
 		if err != nil {
-			logger.Logger.Errorw("error when parsing request", "error", err)
+			errors.HandleError(w, err, errors.InternalError)
+			return
 		}
-		logger.Logger.Infow("event request body", "event", string(body))
+		logger.Logger.Infow("mapped payload", "kyma event type", kymaEvent.EventType)
 
-		//kymaEvent, err := incoming.Process(body)
-		//if err != nil {
-		//	errors.HandleError(w, err, errors.InternalError)
-		//	return
-		//}
-		//
-		//resp, err := ep.eventForwarder.Forward(kymaEvent)
-		//if err != nil {
-		//	errors.HandleError(w, err, errors.InternalError)
-		//	return
-		//}
-		//
-		//logger.Logger.Infow("Received response for event publishing", "response", resp)
+		resp, err := ep.eventForwarder.Forward(kymaEvent)
+		if err != nil {
+			errors.HandleError(w, err, errors.InternalError)
+			return
+		}
+
+		logger.Logger.Infow("Received response for event publishing", "response", resp)
 
 		w.WriteHeader(http.StatusOK)
 	})

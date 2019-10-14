@@ -1,4 +1,4 @@
-RELEASE?=0.0.1
+RELEASE?=0.0.6
 APP?=github-event-gw
 GOOS?=linux
 GOARCH?=amd64

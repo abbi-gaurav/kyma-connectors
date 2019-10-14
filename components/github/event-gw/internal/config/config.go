@@ -12,6 +12,7 @@ type Opts struct {
 	BasicAuthEnabled *bool
 	AppName          *string
 	EventPublishURL  *string
+	SecretKey        *string
 }
 
 var GlobalConfig *Opts
@@ -23,6 +24,7 @@ func ParseFlags() {
 	password := flag.String("password", "", "Basic Auth Password")
 	appName := flag.String("app-name", "", "Application Name")
 	eventPublishURL := flag.String("event-publish-url", "http://event-publish-service.kyma-system.svc.cluster.local:8080/v1/events", "URL to forward incoming events to Kyma Eventing")
+	secretKey := flag.String("secret-key", "", "secret key used to verify event payload signature")
 	flag.Parse()
 
 	GlobalConfig = &Opts{
@@ -32,6 +34,7 @@ func ParseFlags() {
 		Passwd:           password,
 		AppName:          appName,
 		EventPublishURL:  eventPublishURL,
+		SecretKey:        secretKey,
 	}
 
 	if *GlobalConfig.BasicAuthEnabled && (*GlobalConfig.UserName == "" || *GlobalConfig.Passwd == "") {

@@ -14,7 +14,7 @@ data:
             "description": "GitHub Events v1"
           },
           "topics": {
-            "issuesevent.opened.v1": {
+            "issues.v1": {
               "subscribe": {
                 "summary": "New issue opened on github repository",
                 "payload": {
@@ -45,7 +45,7 @@ data:
                 }
               }
             },
-            "pullrequestreviewevent.submitted.v1": {
+            "pull_request_review.v1": {
               "subscribe": {
                 "summary": "Triggered when a pull request review is submitted into a non-pending state.",
                 "payload": {
@@ -76,7 +76,7 @@ data:
                 }
               }
             },
-            "pullrequestevent.opened.v1": {
+            "pull_request.v1": {
               "subscribe": {
                 "summary": "Triggered when a new pull request is opened",
                 "payload": {
