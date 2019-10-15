@@ -40,7 +40,7 @@ spec:
   authentication: []
   hostname: github-event-gw.{{ .Values.cluster_domain }}
   service:
-    name: github-event-gw
+    name: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}-github-event-gw
     port: 8080
 ---
 apiVersion: apps/v1
@@ -70,7 +70,7 @@ spec:
         kind: event-gw
     spec:
       containers:
-      - image: gabbi/github-event-gw:0.0.1
+      - image: gabbi/github-event-gw:0.0.7
         name: github-event-gw
         resources: {}
         ports:
@@ -82,8 +82,8 @@ spec:
               optional: false
         args:
           - --verbose=false
-          - --basic-auth-enabled=true
-          - --app-name={{ .Values.application_name | quote }}
+          - --basic-auth-enabled=false
+          - --app-name={{ .Values.application_name }}
           - --event-publish-url=http://event-publish-service.kyma-system.svc.cluster.local:8080/v1/events
           - --secret-key=$(EVENT_SIGN_SECRET)
 status: {}
