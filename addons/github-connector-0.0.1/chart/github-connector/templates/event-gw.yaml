@@ -4,7 +4,10 @@ data:
 kind: Secret
 metadata:
   creationTimestamp: null
-  name: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}-github-event-gw
+  name: {{ template "bundle.fullname" . }}-github-event-gw
+  labels:
+    app: {{ template "bundle.fullname" . }}
+    component: {{ template "bundle.fullname" . }}-github-event-gw
   namespace: {{ .Values.namespace }}
 type: Opaque
 ---
@@ -14,9 +17,8 @@ metadata:
   creationTimestamp: null
   labels:
     app: {{ template "bundle.fullname" . }}
-    component: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}
-    kind: event-gw
-  name: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}-github-event-gw
+    component: {{ template "bundle.fullname" . }}-github-event-gw
+  name: {{ template "bundle.fullname" . }}-github-event-gw
   namespace: kyma-integration
 spec:
   ports:
@@ -25,8 +27,7 @@ spec:
     targetPort: 8080
   selector:
     app: {{ template "bundle.fullname" . }}
-    component: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}
-    kind: event-gw
+    component: {{ template "bundle.fullname" . }}-github-event-gw
   type: ClusterIP
 status:
   loadBalancer: {}
@@ -34,13 +35,16 @@ status:
 apiVersion: gateway.kyma-project.io/v1alpha2
 kind: Api
 metadata:
-  name: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}-github-event-gw
+  name: {{ template "bundle.fullname" . }}-github-event-gw
   namespace: kyma-integration
+  labels:
+    app: {{ template "bundle.fullname" . }}
+    component: {{ template "bundle.fullname" . }}-github-event-gw
 spec:
   authentication: []
   hostname: github-event-gw.{{ .Values.cluster_domain }}
   service:
-    name: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}-github-event-gw
+    name: {{ template "bundle.fullname" . }}-github-event-gw
     port: 8080
 ---
 apiVersion: apps/v1
@@ -49,25 +53,22 @@ metadata:
   creationTimestamp: null
   labels:
     app: {{ template "bundle.fullname" . }}
-    component: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}
-    kind: event-gw
-  name: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}-github-event-gw
+    component: {{ template "bundle.fullname" . }}-github-event-gw
+  name: {{ template "bundle.fullname" . }}-github-event-gw
   namespace: kyma-integration
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ template "bundle.fullname" . }}
-      component: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}
-      kind: event-gw
+      component: {{ template "bundle.fullname" . }}-github-event-gw
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
         app: {{ template "bundle.fullname" . }}
-        component: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}
-        kind: event-gw
+        component: {{ template "bundle.fullname" . }}-github-event-gw
     spec:
       containers:
       - image: gabbi/github-event-gw:0.0.7
@@ -78,7 +79,7 @@ spec:
             protocol: TCP
         envFrom:
           - secretRef:
-              name: {{ template "bundle.fullname" . }}-{{ .Values.apiRegistrationJobName }}-github-event-gw
+              name: {{ template "bundle.fullname" . }}-github-event-gw
               optional: false
         args:
           - --verbose=false
