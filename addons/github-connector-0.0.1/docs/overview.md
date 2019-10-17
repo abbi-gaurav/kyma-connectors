@@ -7,3 +7,6 @@ Use **Github Connector** to connect your repository webhooks with Kyma events to
 
 **Prerequisite**
 It uses the API token for makinng API calls to Github.
+
+**Components**
+![architecture](./assets/github-connector.svg)
