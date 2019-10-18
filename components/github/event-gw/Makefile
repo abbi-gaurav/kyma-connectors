@@ -2,7 +2,8 @@ RELEASE?=0.0.7
 APP?=github-event-gw
 GOOS?=linux
 GOARCH?=amd64
-CONTAINER_IMAGE?=gabbi/${APP}
+DOCKER_ACCOUNT?=gabbi
+CONTAINER_IMAGE?=${DOCKER_ACCOUNT}/${APP}
 
 clean:
 	rm -rf ${APP}
@@ -21,7 +22,7 @@ build: clean vet test
 build-image: build
 	docker build -t $(CONTAINER_IMAGE):$(RELEASE) .
 
-push-image:
+push-image: build-image
 	docker push $(CONTAINER_IMAGE):$(RELEASE)
 
 tidy:
